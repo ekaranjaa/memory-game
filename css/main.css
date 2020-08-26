@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background: url('../images/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+header {
+  margin-bottom: auto;
+}
+
+footer {
+  margin-top: auto;
+}
+
+header,
+footer {
+  padding: 10px;
+  color: #000;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+header a,
+footer a {
+  text-decoration: none;
+  color: #000;
+}
+
+footer a:hover {
+  text-decoration: underline dotted;
+}
+
+.container {
+  padding: 10px;
+}
+
+.tracker {
+  margin-bottom: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px #ccc;
+}
+
+.stars {
+  font-size: 0.7rem;
+  color: #ccc;
+}
+
+.star.active {
+  color: yellow;
+}
+
+.restart {
+  font-size: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.stars,
+.moves,
+.time,
+.restart {
+  margin: 0 10px;
+}
+
+.deck {
+  padding: 15px;
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  max-width: 500px;
+  border-radius: 5px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px #ccc;
+}
+
+.holder {
+  cursor: pointer;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 5px #ccc;
+  transform-style: preserve-3d;
+}
+
+.card {
+  padding: 30px 10px;
+  position: relative;
+  font-size: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  color: #fff;
+  background: #72d8d8;
+  transition: 0.5s ease-in-out;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f1807f;
+  transform: rotateY(180deg);
+  border-radius: inherit;
+}
+
+.card.active {
+  transform: rotateY(0);
+  backface-visibility: visible;
+}
+
+.card.passed {
+  background: #72d8a6;
+  transform: rotateY(0);
+}
