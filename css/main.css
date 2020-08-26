@@ -20,14 +20,6 @@ body {
   background-attachment: fixed;
 }
 
-header {
-  margin-bottom: auto;
-}
-
-footer {
-  margin-top: auto;
-}
-
 header,
 footer {
   padding: 10px;
@@ -41,6 +33,14 @@ header a,
 footer a {
   text-decoration: none;
   color: #000;
+}
+
+header {
+  margin-bottom: auto;
+}
+
+footer {
+  margin-top: auto;
 }
 
 footer a:hover {
@@ -83,6 +83,7 @@ footer a:hover {
 .time,
 .restart {
   margin: 0 10px;
+  white-space: nowrap;
 }
 
 .deck {
@@ -117,7 +118,7 @@ footer a:hover {
   backface-visibility: hidden;
   color: #fff;
   background: #72d8d8;
-  transition: 0.5s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .card::before {
@@ -135,9 +136,18 @@ footer a:hover {
 .card.active {
   transform: rotateY(0);
   backface-visibility: visible;
+  cursor: default;
+  pointer-events: none;
 }
 
 .card.passed {
   background: #72d8a6;
-  transform: rotateY(0);
+  transform: rotateY(360deg);
+  cursor: default;
+  pointer-events: none;
+}
+
+.card.disabled {
+  cursor: default;
+  pointer-events: none;
 }
