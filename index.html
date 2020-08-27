@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#fff">
-    <title>IQ Game</title>
+    <title>Memory Game</title>
     <link rel="stylesheet" href="./css/main.css">
     <script src="https://kit.fontawesome.com/885fbd8d84.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <header>
-        <h1><a href="/">IQ Game</a></h1>
+        <h1><a href="/">Memory Game</a></h1>
     </header>
 
     <article class="container">
@@ -30,7 +30,7 @@
             <div class="time">
                 <p>Time: 00:00</p>
             </div>
-            <button class="restart" onclick="window.location.reload()">
+            <button class="restart" onclick="restartGame()">
                 <i class="fas fa-redo"></i>
             </button>
         </section>
@@ -84,6 +84,23 @@
                 <div class="card" data-name="apple"><i class="fas fa-apple-alt"></i></div>
             </li>
         </ul>
+    </article>
+
+    <article class="verdict">
+        <h2 class="message"></h2>
+        <p class="statement"></p>
+        <div class="stats">
+            <div class="stars">
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+            </div>
+            <div class="moves"></div>
+            <div class="time"></div>
+        </div>
+        <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
     </article>
 
     <footer>

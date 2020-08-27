@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Tangerine:wght@700&display=swap');
 
 * {
   margin: 0;
@@ -51,9 +51,41 @@ footer a:hover {
   padding: 10px;
 }
 
+.verdict {
+  padding: 20px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  border-radius: 5px;
+  display: none;
+}
+
+.verdict h2 {
+  font-size: 3rem;
+  font-family: 'Tangerine', cursive;
+}
+
+.verdict .stats {
+  margin: 20px auto;
+}
+
+.verdict .stars {
+  font-size: 1.2rem;
+}
+
+.verdict .btn {
+  padding: 10px 20px;
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  background: linear-gradient(#83cfe1, #75baca);
+  cursor: pointer;
+}
+
 .tracker {
   margin-bottom: 10px;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   align-items: center;
   border-radius: 5px;
@@ -76,22 +108,26 @@ footer a:hover {
   background: none;
   cursor: pointer;
   outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+.restart:active {
+  transform: rotate(360deg);
 }
 
 .stars,
 .moves,
 .time,
 .restart {
-  margin: 0 10px;
-  white-space: nowrap;
+  margin: 0 5px;
 }
 
 .deck {
-  padding: 15px;
+  padding: 10px;
   list-style-type: none;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+  gap: 10px;
   max-width: 500px;
   border-radius: 5px;
   backdrop-filter: blur(8px);
@@ -101,13 +137,13 @@ footer a:hover {
 .holder {
   cursor: pointer;
   border-radius: 5px;
-  overflow: hidden;
   box-shadow: 0 0 5px #ccc;
   transform-style: preserve-3d;
+  overflow: hidden;
 }
 
 .card {
-  padding: 30px 10px;
+  padding: 30px 0;
   position: relative;
   font-size: 1.5rem;
   display: grid;
@@ -131,23 +167,21 @@ footer a:hover {
   background: #f1807f;
   transform: rotateY(180deg);
   border-radius: inherit;
+  transition: 0.3s ease-in-out;
 }
 
 .card.active {
   transform: rotateY(0);
   backface-visibility: visible;
+  transition: 0.3s ease-in-out;
   cursor: default;
   pointer-events: none;
 }
 
 .card.passed {
-  background: #72d8a6;
   transform: rotateY(360deg);
-  cursor: default;
-  pointer-events: none;
-}
-
-.card.disabled {
+  backface-visibility: visible;
+  background: #72d8a6;
   cursor: default;
   pointer-events: none;
 }

@@ -1,54 +1,32 @@
-const starEls = document.querySelector('.star')
+const container = document.querySelector('.container')
+const verdictEl = document.querySelector('.verdict')
+const deck = document.querySelector('.deck')
+const stars = document.querySelectorAll('.tracker .stars .star')
 const movesEl = document.querySelector('.moves')
 const timeEl = document.querySelector('.time')
-const deck = document.querySelector('.deck')
+const cards = document.querySelectorAll('.card')
 let clicks = 0
-let stars = 5
 let moves = {
   total: 0,
-  correct: 0,
+  minimum: 16,
 }
+let score = 0
 let time = {
   seconds: 0,
   minutes: 0,
   timeout: 10,
+  minimum: 20,
 }
 
-// Check if player's cards match
-function checkCards(cardOne, cardTwo) {
-  const cards = document.querySelectorAll('.card')
-
-  console.log(cardOne, cardTwo)
-
-  cards.forEach(card => {
-    card.classList.add('disabled')
-
-    setTimeout(() => {
-      if (cardOne === cardTwo) {
-        if (
-          card.getAttribute('data-name') === cardOne ||
-          card.getAttribute('data-name') === cardTwo
-        ) {
-          card.classList.add('passed')
-        }
-      } else {
-        card.classList.remove('active')
-      }
-
-      card.classList.remove('disabled')
-    }, 800)
-  })
-}
-
-// Refresh player's score
-function refreshStars() {
-  if (moves.correct > 1) {
-    stars++
-  }
-}
+window.onload = () => reshuffle()
+deck.onclick = e => executeRound(e)
 
 // The game runs once a click event happens in the `deck` container
-deck.onclick = e => {
+function executeRound(e) {
+  if (time.seconds === 0) {
+    startTimer()
+  }
+
   if (e.target.classList.contains('holder')) {
     if (
       e.target.firstElementChild.classList.contains('active') ||
@@ -72,7 +50,7 @@ deck.onclick = e => {
           'cardTwo',
           e.target.firstElementChild.getAttribute('data-name')
         )
-        checkCards(
+        inspectCards(
           sessionStorage.getItem('cardOne'),
           sessionStorage.getItem('cardTwo')
         )
@@ -81,28 +59,156 @@ deck.onclick = e => {
       }
 
       moves.total++
-      movesEl.innerHTML = `<p>Moves: ${moves.total}</p>`
+      updateMoves()
     }
   }
 }
 
-// Timer
-const x = setInterval(() => {
-  let seconds = ++time.seconds
+// Check if player's cards match
+function inspectCards(cardOne, cardTwo) {
+  setTimeout(() => {
+    cards.forEach(card => {
+      if (cardOne === cardTwo) {
+        if (
+          card.getAttribute('data-name') === cardOne ||
+          card.getAttribute('data-name') === cardTwo
+        ) {
+          card.classList.add('passed')
+        }
+      } else {
+        card.classList.remove('active')
+      }
+    })
 
-  if (seconds > 59) {
-    time.minutes++
+    if (cardOne === cardTwo) {
+      updateScore()
+      refreshCards()
+    }
+  }, 800)
+}
+
+/*
+  Refresh player's score
+  - We calculate the score based on the minumum moves and time
+  needed to complete the game.
+  - The faster and accurate a player is, the higher the score.
+*/
+function updateScore() {
+  if (time.minutes >= 1) {
+    score = Math.round(
+      Math.floor(
+        ((time.minimum / time.seconds / (time.minutes * time.minimum)) *
+          (moves.minimum * moves.total) *
+          5) /
+          30
+      )
+    )
+  } else {
+    score = Math.round(
+      Math.floor(
+        (time.minimum / time.seconds) * (moves.minimum * moves.total) * 5
+      ) / 30
+    )
+  }
+
+  stars.forEach((star, index) => {
+    if (score >= (index + 1) * 8) {
+      star.classList.add('active')
+    } else {
+      star.classList.remove('active')
+    }
+  })
+}
+
+// Update moves as player plays
+function updateMoves() {
+  movesEl.innerHTML = `<p>Moves: ${moves.total}</p>`
+}
+
+// Check how many cards have been flipped and pass the verdict
+function refreshCards() {
+  const flippedCards = document.querySelectorAll('.card.passed').length
+  const cardsRemaining = deck.children.length - flippedCards
+
+  if (cardsRemaining === 0) {
+    setTimeout(() => verdict(), 500)
+  }
+}
+
+// Decide based on the users performance
+function verdict() {
+  const playermMssage = document.querySelector('.verdict .message')
+  const playerTip = document.querySelector('.verdict .statement')
+  const playerStars = document.querySelectorAll('.verdict .stats .stars .star')
+  const playerMoves = document.querySelector('.verdict .stats .moves')
+  const playerTime = document.querySelector('.verdict .stats .time')
+
+  container.style.display = 'none'
+  verdictEl.style.display = 'block'
+  playerMoves.innerHTML = `<p>Moves: ${moves.total}</p>`
+  playerTime.innerHTML = `<p>Time: ${time.minutes}m ${time.seconds}s</p>`
+
+  playerStars.forEach((star, index) => {
+    if (score >= (index + 1) * 8) {
+      star.classList.add('active')
+    } else {
+      star.classList.remove('active')
+    }
+  })
+
+  if (score > 30) {
+    playermMssage.innerHTML = 'Congratulations!'
+    playerTip.innerHTML = `You did well.`
+  } else {
+    playermMssage.innerHTML = 'Try again!'
+    playerTip.innerHTML = `Your score was too low.`
+  }
+}
+
+// Restart game
+function restartGame() {
+  container.style.display = 'block'
+  verdictEl.style.display = 'none'
+
+  if (time.seconds > 0) {
+    clicks = 0
+    score = 0
+    moves.total = 0
     time.seconds = 0
-  }
+    time.minutes = 0
 
-  if (time.minutes === time.timeout) {
-    clearInterval(x)
-  }
+    cards.forEach(card => {
+      card.classList.remove('active')
+      card.classList.remove('passed')
+    })
 
-  timeEl.innerHTML = `<p>Time: ${time.minutes}m ${time.seconds}s</p>`
-}, 1000)
+    updateMoves()
+    reshuffle()
+  }
+}
+
+// Timer
+function startTimer() {
+  const x = setInterval(() => {
+    let seconds = ++time.seconds
+
+    if (seconds > 59) {
+      time.minutes++
+      time.seconds = 0
+    }
+
+    if (time.minutes === time.timeout) {
+      clearInterval(x)
+      verdict()
+    }
+
+    timeEl.innerHTML = `<p>Time: ${time.minutes}m ${time.seconds}s</p>`
+  }, 1000)
+}
 
 // Re-shuffle cards
-for (let i = deck.children.length; i >= 0; i--) {
-  deck.appendChild(deck.children[Math.floor(Math.random() * i)])
+function reshuffle() {
+  for (let i = deck.children.length; i >= 0; i--) {
+    deck.appendChild(deck.children[Math.floor(Math.random() * i)])
+  }
 }
