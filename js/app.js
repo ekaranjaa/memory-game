@@ -100,7 +100,7 @@ function updateScore() {
         ((time.minimum / time.seconds / (time.minutes * time.seconds)) *
           (moves.minimum * moves.total) *
           5) /
-          10
+        10
       )
     )
   } else {
@@ -191,6 +191,10 @@ function restartGame() {
     stars.forEach(star => {
       star.classList.remove('active')
     })
+
+    if (time.minutes >= time.timeout) {
+      startTimer()
+    }
 
     updateMoves()
     reshuffle()
