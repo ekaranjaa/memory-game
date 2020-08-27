@@ -36,6 +36,8 @@ footer a {
 }
 
 header {
+  font-size: 2rem;
+  font-weight: bold;
   margin-bottom: auto;
 }
 
@@ -54,12 +56,12 @@ footer a:hover {
 .verdict {
   padding: 20px;
   text-align: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(5px);
   border-radius: 5px;
   display: none;
 }
 
-.verdict h2 {
+.verdict h1 {
   font-size: 3rem;
   font-family: 'Tangerine', cursive;
 }
@@ -69,11 +71,12 @@ footer a:hover {
 }
 
 .verdict .stars {
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .verdict .btn {
   padding: 10px 20px;
+  font-size: 1rem;
   display: block;
   width: 100%;
   border: none;
@@ -89,17 +92,20 @@ footer a:hover {
   display: flex;
   align-items: center;
   border-radius: 5px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(5px);
   box-shadow: 0 0 10px #ccc;
 }
 
-.stars {
+.tracker .stars {
   font-size: 0.7rem;
+}
+
+.stars {
   color: #ccc;
 }
 
 .star.active {
-  color: yellow;
+  color: #ffeb3b;
 }
 
 .restart {
@@ -130,7 +136,7 @@ footer a:hover {
   gap: 10px;
   max-width: 500px;
   border-radius: 5px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(5px);
   box-shadow: 0 0 10px #ccc;
 }
 
@@ -182,6 +188,4 @@ footer a:hover {
   transform: rotateY(360deg);
   backface-visibility: visible;
   background: #72d8a6;
-  cursor: default;
-  pointer-events: none;
 }

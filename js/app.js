@@ -14,8 +14,8 @@ let score = 0
 let time = {
   seconds: 0,
   minutes: 0,
-  timeout: 10,
-  minimum: 20,
+  timeout: 5,
+  minimum: 30,
 }
 
 window.onload = () => reshuffle()
@@ -23,7 +23,7 @@ deck.onclick = e => executeRound(e)
 
 // The game runs once a click event happens in the `deck` container
 function executeRound(e) {
-  if (time.seconds === 0) {
+  if (moves.total === 0 && time.seconds === 0) {
     startTimer()
   }
 
@@ -97,22 +97,23 @@ function updateScore() {
   if (time.minutes >= 1) {
     score = Math.round(
       Math.floor(
-        ((time.minimum / time.seconds / (time.minutes * time.minimum)) *
+        ((time.minimum / time.seconds / (time.minutes * time.seconds)) *
           (moves.minimum * moves.total) *
           5) /
-          30
+          10
       )
     )
   } else {
     score = Math.round(
       Math.floor(
         (time.minimum / time.seconds) * (moves.minimum * moves.total) * 5
-      ) / 30
+      ) / 20
     )
   }
 
   stars.forEach((star, index) => {
-    if (score >= (index + 1) * 8) {
+    console.log('Score', score, 'Index', (index + 1) * 10)
+    if (score >= (index + 1) * 10) {
       star.classList.add('active')
     } else {
       star.classList.remove('active')
@@ -131,7 +132,7 @@ function refreshCards() {
   const cardsRemaining = deck.children.length - flippedCards
 
   if (cardsRemaining === 0) {
-    setTimeout(() => verdict(), 500)
+    setTimeout(() => verdict(), 800)
   }
 }
 
@@ -149,7 +150,7 @@ function verdict() {
   playerTime.innerHTML = `<p>Time: ${time.minutes}m ${time.seconds}s</p>`
 
   playerStars.forEach((star, index) => {
-    if (score >= (index + 1) * 8) {
+    if (score >= (index + 1) * 10) {
       star.classList.add('active')
     } else {
       star.classList.remove('active')
@@ -163,6 +164,11 @@ function verdict() {
     playermMssage.innerHTML = 'Try again!'
     playerTip.innerHTML = `Your score was too low.`
   }
+
+  if (time.minutes >= time.timeout) {
+    playermMssage.innerHTML = 'Try again!'
+    playerTip.innerHTML = `You took too long.`
+  }
 }
 
 // Restart game
@@ -170,7 +176,7 @@ function restartGame() {
   container.style.display = 'block'
   verdictEl.style.display = 'none'
 
-  if (time.seconds > 0) {
+  if (moves.total > 0 || time.seconds > 0) {
     clicks = 0
     score = 0
     moves.total = 0
@@ -180,6 +186,10 @@ function restartGame() {
     cards.forEach(card => {
       card.classList.remove('active')
       card.classList.remove('passed')
+    })
+
+    stars.forEach(star => {
+      star.classList.remove('active')
     })
 
     updateMoves()
