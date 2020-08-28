@@ -15,7 +15,7 @@ let time = {
   seconds: 0,
   minutes: 0,
   timeout: 5,
-  minimum: 30,
+  minimum: 20,
 }
 
 window.onload = () => reshuffle()
@@ -50,6 +50,7 @@ function executeRound(e) {
           'cardTwo',
           e.target.firstElementChild.getAttribute('data-name')
         )
+
         inspectCards(
           sessionStorage.getItem('cardOne'),
           sessionStorage.getItem('cardTwo')
@@ -66,6 +67,10 @@ function executeRound(e) {
 
 // Check if player's cards match
 function inspectCards(cardOne, cardTwo) {
+  cards.forEach(card => {
+    card.parentElement.classList.add('active')
+  })
+
   setTimeout(() => {
     cards.forEach(card => {
       if (cardOne === cardTwo) {
@@ -74,16 +79,16 @@ function inspectCards(cardOne, cardTwo) {
           card.getAttribute('data-name') === cardTwo
         ) {
           card.classList.add('passed')
+          updateScore()
+          refreshCards()
+        } else {
+          card.parentElement.classList.remove('active')
         }
       } else {
         card.classList.remove('active')
+        card.parentElement.classList.remove('active')
       }
     })
-
-    if (cardOne === cardTwo) {
-      updateScore()
-      refreshCards()
-    }
   }, 800)
 }
 
@@ -97,10 +102,10 @@ function updateScore() {
   if (time.minutes >= 1) {
     score = Math.round(
       Math.floor(
-        ((time.minimum / time.seconds / (time.minutes * time.seconds)) *
+        (((time.minimum / time.seconds) / ((time.minutes * 60) + time.seconds)) *
           (moves.minimum * moves.total) *
           5) /
-        10
+        5
       )
     )
   } else {
@@ -112,7 +117,6 @@ function updateScore() {
   }
 
   stars.forEach((star, index) => {
-    console.log('Score', score, 'Index', (index + 1) * 10)
     if (score >= (index + 1) * 10) {
       star.classList.add('active')
     } else {
